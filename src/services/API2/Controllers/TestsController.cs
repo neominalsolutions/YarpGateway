@@ -18,6 +18,12 @@ namespace API2.Controllers
     [HttpGet("suppliers")]
     public IActionResult Get(string name,string company)
     {
+      // Thread.Sleep(7000); timeout denemesi
+      // Retry denemesinde uygulamayı run etmeyelim
+      // Circuit Breaker denemesinde ise Exception fırlatım.
+
+      // throw new Exception("Hata"); // CircuitBraker Request durumunda tahmin edilemeyen hataları takip eder.
+
       return Ok($"GET Suppliers {company}/{name}");
     }
 

@@ -11,11 +11,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient("api2",config =>
+builder.Services.AddHttpClient("api2", config =>
 {
   config.BaseAddress = new Uri("https://localhost:5010");
 
-}).AddPolicyHandler(RecilencyHelper.CreateRetryPolicy(retryCount:3,sleepDuration:TimeSpan.FromSeconds(2)));
+})
+.AddPolicyHandler(RecilencyHelper.CreateRetryPolicy(retryCount: 3, sleepDuration: TimeSpan.FromSeconds(2)))
+.AddPolicyHandler(RecilencyHelper.CreateTimeoutPolicy(TimeSpan.FromSeconds(6)))
+.AddPolicyHandler(RecilencyHelper.CreateCircuitBrakerPolicy(errorCount: 2, durationOfBreak: TimeSpan.FromSeconds(30)));
+
+
+
 
 
 var app = builder.Build();
