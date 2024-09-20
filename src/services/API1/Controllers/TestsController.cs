@@ -8,6 +8,14 @@ namespace API1.Controllers
   [ApiController]
   public class TestsController : ControllerBase
   {
+
+    private readonly HttpClient client;
+
+    public TestsController(IHttpClientFactory httpClientFactory)
+    {
+      client = httpClientFactory.CreateClient("api2");
+    }
+
     [HttpGet]
     public IActionResult Get()
     {
@@ -23,7 +31,15 @@ namespace API1.Controllers
       return Ok("GET Products By Id" + id);
     }
 
-  
+    [HttpGet("suppliers")]
+    public async Task<IActionResult> SendRequest()
+    {
+      var data = await  this.client.GetStringAsync("/api2/suppliers?name=ali&company=tskb");
+
+      return Ok(data);
+    }
+
+
 
 
   }

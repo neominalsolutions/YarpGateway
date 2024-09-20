@@ -1,3 +1,5 @@
+using Recilency.Core.Policies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseUrls("https://localhost:5005", "https://localhost:5025");
@@ -8,6 +10,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient("api2",config =>
+{
+  config.BaseAddress = new Uri("https://localhost:5010");
+
+}).AddPolicyHandler(RecilencyHelper.CreateRetryPolicy(retryCount:3,sleepDuration:TimeSpan.FromSeconds(2)));
+
 
 var app = builder.Build();
 
